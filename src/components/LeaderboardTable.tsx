@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { ParticipantData } from "@/pages/Index";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -35,6 +34,15 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
   const indexOfLastItem = Math.min(indexOfFirstItem + itemsPerPage, participants.length);
   const currentItems = participants.slice(indexOfFirstItem, indexOfLastItem);
   
+  console.log({
+    total: participants.length,
+    currentPage,
+    itemsPerPage,
+    indexOfFirstItem,
+    indexOfLastItem,
+    currentItemsLength: currentItems.length
+  });
+  
   // Auto pagination every 10 seconds
   useEffect(() => {
     // Only start auto-pagination if we have enough items for multiple pages
@@ -64,31 +72,36 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
   
   return (
     <div className="flex flex-col h-full">
-      <ScrollArea className="h-[350px] overflow-auto">
+      <ScrollArea className="h-[480px] overflow-auto">
         {participants.length > 0 ? (
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead className="w-16">排名</TableHead>
-                <TableHead>姓名</TableHead>
-                <TableHead className="text-right">杯數</TableHead>
+                <TableHead className="w-[80px]">排名</TableHead>
+                <TableHead className="w-1/3">姓名</TableHead>
+                <TableHead className="w-1/3 text-center">杯數</TableHead>
+                <TableHead className="w-1/3">編號</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {currentItems.map((participant, index) => (
                 <TableRow 
                   key={participant.id}
-                  className="animate-in fade-in-50 duration-300"
+                  className="animate-in fade-in-50 duration-300 even:bg-gray-100"
                 >
-                  <TableCell className="font-medium">{indexOfFirstItem + index + 1}</TableCell>
+                  <TableCell className="font-medium">{participants.findIndex(p => p.id === participant.id) + 1}</TableCell>
                   <TableCell>{participant.name}</TableCell>
-                  <TableCell className="text-right font-semibold">{participant.cups}</TableCell>
+                  <TableCell className="text-center font-semibold">{participant.cups}</TableCell>
+                  <TableCell>{participant.code}</TableCell>
                 </TableRow>
               ))}
               {/* Add empty rows to ensure consistent height when not enough data */}
               {currentItems.length < itemsPerPage && Array(itemsPerPage - currentItems.length).fill(0).map((_, index) => (
-                <TableRow key={`empty-${index}`}>
-                  <TableCell colSpan={3}>&nbsp;</TableCell>
+                <TableRow key={`empty-${index}`} className="even:bg-gray-100">
+                  <TableCell className="h-[41px]">&nbsp;</TableCell>
+                  <TableCell>&nbsp;</TableCell>
+                  <TableCell>&nbsp;</TableCell>
+                  <TableCell>&nbsp;</TableCell>
                 </TableRow>
               ))}
             </TableBody>

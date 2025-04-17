@@ -1,23 +1,37 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import CupCountForm from "@/components/CupCountForm";
 import LeaderboardTable from "@/components/LeaderboardTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { toast } from "@/components/ui/sonner";
 
 export interface ParticipantData {
   id: string;
   name: string;
   cups: number;
+  code: string;
 }
 
-const Index = () => {
-  const [participants, setParticipants] = useState<ParticipantData[]>([]);
+const STORAGE_KEY = 'cup-count-participants';
 
-  const addParticipant = (name: string, cups: number) => {
+const Index = () => {
+  const [participants, setParticipants] = useState<ParticipantData[]>(() => {
+    // 從 localStorage 讀取初始數據
+    const saved = localStorage.getItem(STORAGE_KEY);
+    return saved ? JSON.parse(saved) : [];
+  });
+
+  // 當數據變更時保存到 localStorage
+  useEffect(() => {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(participants));
+  }, [participants]);
+
+  const addParticipant = (name: string, cups: number, code: string) => {
     const newParticipant: ParticipantData = {
       id: Date.now().toString(),
       name,
       cups,
+      code
     };
     
     setParticipants((prev) => {
@@ -25,6 +39,16 @@ const Index = () => {
       // Sort by cups count in descending order
       return updated.sort((a, b) => b.cups - a.cups);
     });
+  };
+
+  const handleReset = () => {
+    const password = prompt('請輸入重置密碼：');
+    if (password === 'ken') {
+      setParticipants([]);
+      toast.success('資料已重置');
+    } else {
+      toast.error('密碼錯誤');
+    }
   };
 
   return (
@@ -38,8 +62,15 @@ const Index = () => {
             <CardHeader className="pb-2">
               <CardTitle className="text-lg">輸入資料</CardTitle>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
               <CupCountForm onAddParticipant={addParticipant} />
+              <Button 
+                variant="outline" 
+                className="w-full h-8 text-sm text-red-500 hover:text-red-600 hover:bg-red-50"
+                onClick={handleReset}
+              >
+                重置資料
+              </Button>
             </CardContent>
           </Card>
 
