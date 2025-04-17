@@ -32,10 +32,10 @@ const Index = () => {
       <div className="max-w-6xl mx-auto">
         <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">杯數排行榜</h1>
         
-        <div className="grid md:grid-cols-3 gap-6">
-          {/* Input Section - smaller, 1/3 of width */}
+        <div className="grid md:grid-cols-4 gap-6">
+          {/* Input Section - smaller, 1/4 of width */}
           <Card className="md:col-span-1">
-            <CardHeader className="pb-3">
+            <CardHeader className="pb-2">
               <CardTitle className="text-lg">輸入資料</CardTitle>
             </CardHeader>
             <CardContent>
@@ -43,9 +43,9 @@ const Index = () => {
             </CardContent>
           </Card>
 
-          {/* Leaderboard Section - larger, 2/3 of width */}
-          <Card className="md:col-span-2">
-            <CardHeader className="pb-3">
+          {/* Leaderboard Section - larger, 3/4 of width */}
+          <Card className="md:col-span-3">
+            <CardHeader className="pb-2">
               <CardTitle className="text-lg">排行榜</CardTitle>
             </CardHeader>
             <CardContent>

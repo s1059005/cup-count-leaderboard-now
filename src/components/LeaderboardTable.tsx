@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ParticipantData } from "@/pages/Index";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { 
@@ -20,14 +19,29 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8; // Show 8 items per page
   
-  const totalPages = Math.ceil(participants.length / itemsPerPage);
+  const totalPages = Math.max(1, Math.ceil(participants.length / itemsPerPage));
   
   // Calculate the current items to display
   const indexOfLastItem = currentPage * itemsPerPage;
   const indexOfFirstItem = indexOfLastItem - itemsPerPage;
   const currentItems = participants.slice(indexOfFirstItem, indexOfLastItem);
   
-  // Change page
+  // Auto pagination every 10 seconds
+  useEffect(() => {
+    const autoPaginationTimer = setInterval(() => {
+      setCurrentPage((prevPage) => {
+        // If we're on the last page, go back to the first page
+        // Otherwise go to the next page
+        return prevPage >= totalPages ? 1 : prevPage + 1;
+      });
+    }, 10000); // 10 seconds interval
+    
+    return () => {
+      clearInterval(autoPaginationTimer); // Clean up on unmount
+    };
+  }, [totalPages]);
+  
+  // Change page manually
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
   
   // Generate page numbers
@@ -69,35 +83,41 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
       </ScrollArea>
       
       {totalPages > 1 && (
-        <Pagination className="mt-4">
-          <PaginationContent>
-            <PaginationItem>
-              <PaginationPrevious 
-                onClick={() => currentPage > 1 && paginate(currentPage - 1)}
-                className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-              />
-            </PaginationItem>
-            
-            {pageNumbers.map((number) => (
-              <PaginationItem key={number}>
-                <PaginationLink 
-                  isActive={currentPage === number} 
-                  onClick={() => paginate(number)}
-                  className="cursor-pointer"
-                >
-                  {number}
-                </PaginationLink>
+        <div className="mt-4 flex items-center justify-between">
+          <div className="text-sm text-muted-foreground">
+            頁面 {currentPage} / {totalPages} (10秒自動換頁)
+          </div>
+          
+          <Pagination>
+            <PaginationContent>
+              <PaginationItem>
+                <PaginationPrevious 
+                  onClick={() => currentPage > 1 && paginate(currentPage - 1)}
+                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
               </PaginationItem>
-            ))}
-            
-            <PaginationItem>
-              <PaginationNext 
-                onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
-                className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-              />
-            </PaginationItem>
-          </PaginationContent>
-        </Pagination>
+              
+              {pageNumbers.map((number) => (
+                <PaginationItem key={number}>
+                  <PaginationLink 
+                    isActive={currentPage === number} 
+                    onClick={() => paginate(number)}
+                    className="cursor-pointer"
+                  >
+                    {number}
+                  </PaginationLink>
+                </PaginationItem>
+              ))}
+              
+              <PaginationItem>
+                <PaginationNext 
+                  onClick={() => currentPage < totalPages && paginate(currentPage + 1)}
+                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                />
+              </PaginationItem>
+            </PaginationContent>
+          </Pagination>
+        </div>
       )}
     </div>
   );
