@@ -28,11 +28,6 @@ const CupCountForm = ({ onAddParticipant }: CupCountFormProps) => {
       return;
     }
 
-    if (!code.trim()) {
-      toast.error("請輸入編號");
-      return;
-    }
-
     onAddParticipant(name.trim(), cupsNumber, code.trim());
     toast.success("資料已新增");
     
@@ -83,13 +78,13 @@ const CupCountForm = ({ onAddParticipant }: CupCountFormProps) => {
         </div>
 
         <div>
-          <Label htmlFor="code" className="text-sm">編號</Label>
+          <Label htmlFor="code" className="text-sm">編號 (選填)</Label>
           <Input
             id="code"
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value)}
-            placeholder="請輸入編號"
+            placeholder="請輸入編號（可選）"
             className="mt-1 h-8"
             onKeyDown={handleKeyDown}
           />

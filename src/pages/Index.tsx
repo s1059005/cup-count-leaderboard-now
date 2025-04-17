@@ -4,6 +4,7 @@ import LeaderboardTable from "@/components/LeaderboardTable";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { toast } from "@/components/ui/sonner";
+import ResetDialog from "@/components/ResetDialog";
 
 export interface ParticipantData {
   id: string;
@@ -20,6 +21,8 @@ const Index = () => {
     const saved = localStorage.getItem(STORAGE_KEY);
     return saved ? JSON.parse(saved) : [];
   });
+  
+  const [isResetDialogOpen, setIsResetDialogOpen] = useState(false);
 
   // 當數據變更時保存到 localStorage
   useEffect(() => {
@@ -42,13 +45,11 @@ const Index = () => {
   };
 
   const handleReset = () => {
-    const password = prompt('請輸入重置密碼：');
-    if (password === 'ken') {
-      setParticipants([]);
-      toast.success('資料已重置');
-    } else {
-      toast.error('密碼錯誤');
-    }
+    setParticipants([]);
+  };
+
+  const handleRestore = (data: ParticipantData[]) => {
+    setParticipants(data.sort((a, b) => b.cups - a.cups));
   };
 
   return (
@@ -67,9 +68,9 @@ const Index = () => {
               <Button 
                 variant="outline" 
                 className="w-full h-8 text-sm text-red-500 hover:text-red-600 hover:bg-red-50"
-                onClick={handleReset}
+                onClick={() => setIsResetDialogOpen(true)}
               >
-                重置資料
+                資料管理
               </Button>
             </CardContent>
           </Card>
@@ -85,6 +86,14 @@ const Index = () => {
           </Card>
         </div>
       </div>
+
+      <ResetDialog
+        isOpen={isResetDialogOpen}
+        onClose={() => setIsResetDialogOpen(false)}
+        onReset={handleReset}
+        participants={participants}
+        onRestore={handleRestore}
+      />
     </div>
   );
 };
