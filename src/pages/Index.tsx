@@ -30,23 +30,23 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-gray-50 p-4 md:p-8">
       <div className="max-w-6xl mx-auto">
-        <h1 className="text-3xl md:text-4xl font-bold text-center mb-8">杯數排行榜</h1>
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-6">杯數排行榜</h1>
         
-        <div className="grid md:grid-cols-2 gap-6">
-          {/* Input Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>輸入資料</CardTitle>
+        <div className="grid md:grid-cols-3 gap-6">
+          {/* Input Section - smaller, 1/3 of width */}
+          <Card className="md:col-span-1">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">輸入資料</CardTitle>
             </CardHeader>
             <CardContent>
               <CupCountForm onAddParticipant={addParticipant} />
             </CardContent>
           </Card>
 
-          {/* Leaderboard Section */}
-          <Card>
-            <CardHeader>
-              <CardTitle>排行榜</CardTitle>
+          {/* Leaderboard Section - larger, 2/3 of width */}
+          <Card className="md:col-span-2">
+            <CardHeader className="pb-3">
+              <CardTitle className="text-lg">排行榜</CardTitle>
             </CardHeader>
             <CardContent>
               <LeaderboardTable participants={participants} />

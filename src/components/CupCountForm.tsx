@@ -36,33 +36,35 @@ const CupCountForm = ({ onAddParticipant }: CupCountFormProps) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <Label htmlFor="name">姓名</Label>
-        <Input
-          id="name"
-          type="text"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="請輸入姓名"
-          className="mt-1"
-        />
+    <form onSubmit={handleSubmit} className="space-y-3">
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <Label htmlFor="name" className="text-sm">姓名</Label>
+          <Input
+            id="name"
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="請輸入姓名"
+            className="mt-1 h-9"
+          />
+        </div>
+        
+        <div>
+          <Label htmlFor="cups" className="text-sm">杯數</Label>
+          <Input
+            id="cups"
+            type="number"
+            min="1"
+            value={cups}
+            onChange={(e) => setCups(e.target.value)}
+            placeholder="請輸入杯數"
+            className="mt-1 h-9"
+          />
+        </div>
       </div>
       
-      <div>
-        <Label htmlFor="cups">杯數</Label>
-        <Input
-          id="cups"
-          type="number"
-          min="1"
-          value={cups}
-          onChange={(e) => setCups(e.target.value)}
-          placeholder="請輸入杯數"
-          className="mt-1"
-        />
-      </div>
-      
-      <Button type="submit" className="w-full">
+      <Button type="submit" className="w-full h-9">
         新增資料
       </Button>
     </form>
