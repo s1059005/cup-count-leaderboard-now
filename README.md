@@ -19,6 +19,54 @@
 - Vite
 - shadcn/ui
 
+## Render 平台部署指南
+
+1. 註冊 Render 帳號
+   - 前往 [Render](https://render.com) 官網
+   - 點擊 "Get Started" 註冊新帳號
+   - 可以使用 GitHub 帳號直接登入
+
+2. 連結 GitHub 倉庫
+   - 在 Render Dashboard 中點擊 "New +"
+   - 選擇 "Static Site"
+   - 選擇您的 GitHub 倉庫
+   - 如果沒看到倉庫，點擊 "Configure Account" 授權 Render 訪問
+
+3. 配置部署設定
+   - 名稱：輸入您想要的專案名稱（例如：cup-count-leaderboard）
+   - 分支：選擇要部署的分支（通常是 main 或 master）
+   - 建構命令：`npm install && npm run build`
+   - 發布目錄：`dist`
+   - 環境變數：無需設定（本專案使用 localStorage）
+
+4. 自動部署設定
+   - Render 會自動偵測 `render.yaml` 配置文件
+   - 每次推送到主分支時會自動觸發部署
+   - 可在 Render Dashboard 查看部署狀態和日誌
+
+5. 自定義域名（選擇性）
+   - 在專案設定中點擊 "Custom Domains"
+   - 點擊 "Add Domain"
+   - 按照指示設定 DNS 記錄
+   - Render 會自動提供 SSL 證書
+
+6. 監控和維護
+   - 在 Render Dashboard 可查看：
+     - 部署狀態
+     - 錯誤日誌
+     - 效能指標
+     - 訪問統計
+
+7. 常見問題處理
+   - 如果部署失敗，檢查：
+     - 建構命令是否正確
+     - Node.js 版本是否兼容
+     - 專案依賴是否完整
+   - 如果頁面無法訪問，檢查：
+     - 路由配置是否正確
+     - 靜態文件是否正確生成
+     - 瀏覽器控制台是否有錯誤
+
 ## 開發環境佈署 (Windows)
 
 ### 系統需求
