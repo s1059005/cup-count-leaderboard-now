@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { ParticipantData } from "@/pages/Index";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -19,7 +20,15 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8; // Show 8 items per page
   
+  // Recalculate totalPages whenever participants change
   const totalPages = Math.max(1, Math.ceil(participants.length / itemsPerPage));
+  
+  // Reset to page 1 if current page is greater than total pages (happens when items are removed)
+  useEffect(() => {
+    if (currentPage > totalPages && totalPages > 0) {
+      setCurrentPage(1);
+    }
+  }, [totalPages, currentPage]);
   
   // Calculate the current items to display
   const indexOfLastItem = currentPage * itemsPerPage;
@@ -28,6 +37,9 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
   
   // Auto pagination every 10 seconds
   useEffect(() => {
+    // Only start auto-pagination if we have enough items for multiple pages
+    if (totalPages <= 1) return;
+    
     const autoPaginationTimer = setInterval(() => {
       setCurrentPage((prevPage) => {
         // If we're on the last page, go back to the first page
@@ -71,6 +83,12 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
                   <TableCell className="font-medium">{indexOfFirstItem + index + 1}</TableCell>
                   <TableCell>{participant.name}</TableCell>
                   <TableCell className="text-right font-semibold">{participant.cups}</TableCell>
+                </TableRow>
+              ))}
+              {/* Add empty rows to ensure consistent height when not enough data */}
+              {currentItems.length < itemsPerPage && Array(itemsPerPage - currentItems.length).fill(0).map((_, index) => (
+                <TableRow key={`empty-${index}`}>
+                  <TableCell colSpan={3}>&nbsp;</TableCell>
                 </TableRow>
               ))}
             </TableBody>
