@@ -20,7 +20,7 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 8; // Show 8 items per page
   
-  // Recalculate totalPages whenever participants change
+  // Calculate totalPages properly
   const totalPages = Math.max(1, Math.ceil(participants.length / itemsPerPage));
   
   // Reset to page 1 if current page is greater than total pages (happens when items are removed)
@@ -30,9 +30,9 @@ const LeaderboardTable = ({ participants }: LeaderboardTableProps) => {
     }
   }, [totalPages, currentPage]);
   
-  // Calculate the current items to display
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+  // Calculate the current items to display - fix indexing here
+  const indexOfFirstItem = (currentPage - 1) * itemsPerPage;
+  const indexOfLastItem = Math.min(indexOfFirstItem + itemsPerPage, participants.length);
   const currentItems = participants.slice(indexOfFirstItem, indexOfLastItem);
   
   // Auto pagination every 10 seconds
